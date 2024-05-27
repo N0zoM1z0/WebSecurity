@@ -1,0 +1,63 @@
+Vulnhub环境搭建挺麻烦的
+
+以JIS-CTF这个机子为例
+
+导入ova:
+https://www.cnblogs.com/sn1per/p/11947433.html
+
+下载得到的ova用bandizip解压
+然后把ovf的
+    <VirtualHardwareSection>
+      <Info>Virtual hardware requirements for a virtual machine</Info>
+      <System>
+        <vssd:ElementName>Virtual Hardware Family</vssd:ElementName>
+        <vssd:InstanceID>0</vssd:InstanceID>
+        <vssd:VirtualSystemIdentifier>Jordaninfosec-CTF01</vssd:VirtualSystemIdentifier>
+        <vssd:VirtualSystemType>vmx-17</vssd:VirtualSystemType> !!!<=here!!!
+      </System>
+	  
+改为vmx-17 然后选择一个文件夹导入(不能直接选D:\) 第一次失败 重试即可
+
+配网卡:
+https://blog.csdn.net/nzjdsds/article/details/82811791
+https://cloud.tencent.com/developer/article/1910082
+
+按着上面的来就行了 网卡都是ens33一样的
+
+还是写在本地吧:
+首先打开选择第二个Advanced进入
+然后选第二个
+然后选倒数第二个 root
+进入后Enter进入命令行
+
+先输入这句: mount -o rw,remount /
+然后ifconfig -a
+看网卡叫啥 (ens33)
+然后 vi /etc/network/interfaces
+把
+# The primary...下面的两个网卡的点改为上面查看到的
+
+然后reboot
+
+kali扫
+
+┌──(root💀kali2021)-[/home/kali2021/桌面]
+└─# nmap -sn 192.168.136.0/24
+Starting Nmap 7.91 ( https://nmap.org ) at 2024-04-15 03:01 CST
+Nmap scan report for 192.168.136.1
+Host is up (0.0011s latency).
+MAC Address: 00:50:56:C0:00:08 (VMware)
+Nmap scan report for 192.168.136.2
+Host is up (0.00027s latency).
+MAC Address: 00:50:56:EE:A2:E5 (VMware)
+Nmap scan report for 192.168.136.150     <= here!!!
+Host is up (0.0028s latency).
+MAC Address: 00:0C:29:29:4A:BE (VMware)
+Nmap scan report for 192.168.136.254
+Host is up (0.00012s latency).
+MAC Address: 00:50:56:FC:2B:D8 (VMware)
+Nmap scan report for 192.168.136.146
+Host is up.
+Nmap done: 256 IP addresses (5 hosts up) scanned in 2.05 seconds
+
+192.168.136.150即为靶机的Ip 浏览器访问也能看到
